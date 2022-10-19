@@ -1,11 +1,12 @@
 ---
-title: "Contrast enhanced ultrasonography for early diagnostic of residual liver tumor after transarterial chemoembolization: A diagnostic metanalysis"
+title: "Utility contrast enhanced ultrasonography for detecting residual liver tumor early after transarterial chemoembolization: A diagnostic metanalysis"
 author: "Made Vidyasti Laksita Wijaya, Kadek Adit Wiryadana"
 date: "Buleleng, `r Sys.Date()`"
 output: 
   html_document:
     code_folding: hide
-reference: ref.bib
+bibliography: ref.bib
+csl: nature-publishing-group-vancouver.csl
 ---
 
 ```{r setup, include=FALSE}
@@ -14,13 +15,11 @@ knitr::opts_chunk$set(warning = F)
 
 ## Introduction
 
-TACE is currently the treatment of choice for intermediate stage HCCs [4,208]. The rationale of TACE treatment rests in the super-selective delivery of embolization particles (lipiodol or drug-eluting beads) together with a chemotherapeutic drug (usually Epirubicin), thereby aiming to induce complete anoxia of the malignant tissue area. This causes selective necrosis of the tumor lesion, sparing as much normal liver parenchyma as possible [216]. Even though TACE might achieve a complete therapeutic response, it is still considered a palliative method, since small numbers of malignant cells can escape necrosis. Early detection of such areas will warrant a chance for repeat treatment, usually with a second TACE session [217].
+Transarterial chemoembolization (TACE) is the recommended treatment of choice for intermediate stage HCCs.[@Kudo_2019] The underlying principle of TACE is inducing tumor tissue hypoxia with the selective delivery of embolization particles together with a chemotherapeutic drug. TACE is still considered a palliative method, although it might achieve a complete therapeutic response, small numbers of malignant cells can escape necrosis.[@Liapi_2010] Early evaluation and detection of those residual tumor warrant a chance for immediate repeat treatment.[@wobser_2014; @shiozawa_2021; @takizawa_2013; @watanabe_2020] Thereby, the modality for early detection is paramount important. The most promising modality is the contrast-enhanced ultrasonography (CEUS). This study aimed to gather evidence for diagnostic performance of CEUS in detecting residual tumor within 24-72 hours after TACE treatment.
 
 ## Methods
-
-### PIRO
 ### Literature Search
-### Eligibility Criteria
+### Study Selection
 ### Data Collection
 ### Risk of Bias and Quality Assement
 ### Statistical Analysis
@@ -41,6 +40,7 @@ write_csv(ceus, "ceus.csv")
 
 ```{r read_data, include=FALSE}
 ceus <- read_csv("ceus.csv")
+#ceus <- ceus[1:3,]
 ```
 
 
@@ -100,5 +100,8 @@ plot(fit1, predict=TRUE)
 ## Disclaimer
 
 ## References
+
+<div id="refs"></div>
+
 
 ## Abstract
