@@ -2,9 +2,10 @@
 title: "Utility contrast enhanced ultrasonography for detecting residual liver tumor early after transarterial chemoembolization: A diagnostic metanalysis"
 author: "Made Vidyasti Laksita Wijaya, Kadek Adit Wiryadana"
 date: "Buleleng, `r Sys.Date()`"
-output: 
+output:
   html_document:
     code_folding: hide
+  pdf_document: default
 bibliography: ref.bib
 csl: nature-publishing-group-vancouver.csl
 ---
@@ -18,11 +19,26 @@ knitr::opts_chunk$set(warning = F)
 Transarterial chemoembolization (TACE) is the recommended treatment of choice for intermediate stage HCCs.[@Kudo_2019] The underlying principle of TACE is inducing tumor tissue hypoxia with the selective delivery of embolization particles together with a chemotherapeutic drug. TACE is still considered a palliative method, although it might achieve a complete therapeutic response, small numbers of malignant cells can escape necrosis.[@Liapi_2010] Early evaluation and detection of those residual tumor warrant a chance for immediate repeat treatment.[@wobser_2014; @shiozawa_2021; @takizawa_2013; @watanabe_2020] Thereby, the modality for early detection is paramount important. The most promising modality is the contrast-enhanced ultrasonography (CEUS). This study aimed to gather evidence for diagnostic performance of CEUS in detecting residual tumor within 24-72 hours after TACE treatment.
 
 ## Methods
+
 ### Literature Search
+
+Data from literature up to September 2022 were searched from PubMed, Embase and Google schoolar. The search term were combination of following: (1) hepatocelular carcinoma, liver carcinoma, liver cancer, hepatoma and HCC; (2) transarterial chemoembolization and TACE; and (3) contrast enhanced ultrasound, contrast enhanced ultrasonography and CEUS. 
+
 ### Study Selection
+
+Studies were included in the analysis if they met the following inclusion criteria: (1) all participant received TACE treatment for hepatocelular carcinoma; (2) all participant had CEUS examination within 72 hours after TACE; (3) All participant undwerwent confirmation test after 1 month with Contrast Enhanced Computed Tomography (CECT) or Magnetic Resonance Imaging (MRI) or both; (4) The study included the absolute number of true-positive, true-negative, false-positive, false-negative or the value of sensitivity, specificitty, positive predictive value and negative predictive value. The study excluded if met the following criteria: (1) the publication included a case report, reviews, or editorial; (2) the study did not report the sufficient parameter of the diagnostic performance about the index test of interest. Literature search and study selection were conducted by two authors (MVLW and KAW). Discrepancy, if any, were resolved by discussion and agreement.
+
 ### Data Collection
+
+The screened study were evaluated and the following data were collected: (1) author, publication date and study design; (2) study quality assessed by the Quality Assessment of Diagnostic Accuracy Studies (QUADAS)[@Whiting_2003]; (2) investigators (MVLW and KAW) independently performed a quality assessment of the included studies, and disagreements were resolved by discussion; (3) the data regarding true positive, false-positive, false-negative, and true-negative results gathered or calculated from each study
+
 ### Risk of Bias and Quality Assement
+
+Risk of bias of the included study was assesed with QUADAS. Visualization for study heterogeneity, indicating for variations between studies, was presented with SROC and Cross-Hairs plots as well as calculation for $I^2$ statistics. if an $I^2$ indicate significant heterogeneity, data were pooled by random-effects model, otherwise it pooled by fixed-effects model.
+
 ### Statistical Analysis
+
+The collected data were tabulated in spreadsheet (Google Sheet) and analyzed in R statistical language (v 4.1.2)[@r-base] through Rstudio interface (RStudio Server 2022.02.3+492 for Ubuntu Bionic).[@rstudio_2021; @ubuntu_2021] Diagnostic metanalysis specific calculation conducted using Mada package.[@mada_2022]. The main analysis was focused on the pooled diagnostic parameter of CEUS early after TACE in detecting residual tumors. The pooled sensitivity, specificity, positive predictive value (PPV), negative predictive value (NPV), positive likelihood ratio (PLR), negative likelihood ratio (NLR) and the diagnostic odds ratio were calculated using the suitable model in respect for the between study heterogeneity. The summary of diagnostic performance were presented in SROC curve.  Additional R package used include rmarkdown for reproducible data calculation and manuscript preparation,[@rmarkdown_2018] googlesheet4 for data bridging from Google Sheets to R,[@googlesheets4] gtsummary for table generation,[@gtsummary] PRISMA2022 for PRISMA chart generation,[@PRISMA2020] and robvis for risk of bias plotting.[@robvis_2019] 
 
 ## Results
 
@@ -30,23 +46,54 @@ Transarterial chemoembolization (TACE) is the recommended treatment of choice fo
 library(tidyverse)
 library(googlesheets4)
 library(mada)
+library(gtsummary)
+library(PRISMA2020)
+library(robvis)
 ```
 
 ```{r load_data, eval=FALSE}
 ceus <- read_sheet("https://docs.google.com/spreadsheets/d/1KOU8NsU6CDHBgILqSRq5UJEILpI68aSKXwZbCBfQPkc/edit#gid=1923082983", sheet = 1)
+prisma <- read_sheet("https://docs.google.com/spreadsheets/d/1KOU8NsU6CDHBgILqSRq5UJEILpI68aSKXwZbCBfQPkc/edit#gid=187635281", sheet = 2)
+quadas <- read_sheet("https://docs.google.com/spreadsheets/d/1KOU8NsU6CDHBgILqSRq5UJEILpI68aSKXwZbCBfQPkc/edit#gid=559964835", sheet = 3)
  
 write_csv(ceus, "ceus.csv")
+write_csv(prisma, "prisma.csv")
+write_csv(quadas, "quadas.csv")
 ```
 
 ```{r read_data, include=FALSE}
 ceus <- read_csv("ceus.csv")
+prisma <- read_csv("prisma.csv")
+quadas <- read_csv("quadas.csv")
 #ceus <- ceus[1:3,]
 ```
 
 
 ### Search Results
 
-### Findings
+```{r prisma_diagram}
+prisma_data <- PRISMA_data(prisma)
+
+PRISMA_flowdiagram(
+              prisma_data,
+              interactive = FALSE,
+              previous = TRUE,
+              other = TRUE,
+              fontsize = 7,
+              font = "Helvetica",
+              title_colour = "Goldenrod1",
+              greybox_colour = "Gainsboro",
+              main_colour = "Black",
+              arrow_colour = "Black",
+              arrow_head = "normal",
+              arrow_tail = "none",
+              side_boxes = TRUE
+              )
+
+```
+
+
+### Characteristics of the Included Studis
 
 ```{r descriptive analysis}
 des_ceus <- madad(ceus,
@@ -56,6 +103,20 @@ des_ceus <- madad(ceus,
                   TN=TN)
 print(des_ceus)
 ```
+
+### Publication Bias and Heterogeneity
+
+```{r rob_summary}
+rob_summary(quadas, tool = "QUADAS-2", overall = TRUE, weighted = FALSE)
+```
+
+
+```{r rob_plot}
+rob_traffic_light(quadas, tool = "QUADAS-2")
+```
+
+
+### Diagnostic Accuracy of CEUS and CECT
 
 ```{r forest_plot_sensitivity}
 forest_sens <- mada::forest(des_ceus, 
