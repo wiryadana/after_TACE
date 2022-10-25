@@ -166,3 +166,9 @@ plot(fit1, predict=TRUE)
 
 
 ## Abstract
+
+
+```{bash}
+cp CEUS_early_after_tace.html index.html
+```
+
