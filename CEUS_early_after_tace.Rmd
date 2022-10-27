@@ -8,10 +8,12 @@ output:
   pdf_document: default
 bibliography: ref.bib
 csl: nature-publishing-group-vancouver.csl
+always_allow_html: true
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(warning = F)
+knitr::opts_chunk$set(echo = F)
 ```
 
 ## Introduction
@@ -57,13 +59,13 @@ prisma <- read_sheet("https://docs.google.com/spreadsheets/d/1KOU8NsU6CDHBgILqSR
 quadas <- read_sheet("https://docs.google.com/spreadsheets/d/1KOU8NsU6CDHBgILqSRq5UJEILpI68aSKXwZbCBfQPkc/edit#gid=559964835", sheet = 3)
  
 write_csv(ceus, "ceus.csv")
-write_csv(prisma, "prisma.csv")
+write_csv(prisma, "prisma.csv", na = "NA")
 write_csv(quadas, "quadas.csv")
 ```
 
 ```{r read_data, include=FALSE}
 ceus <- read_csv("ceus.csv")
-prisma <- read_csv("prisma.csv")
+prisma <- read.csv("prisma.csv")
 quadas <- read_csv("quadas.csv")
 #ceus <- ceus[1:3,]
 ```
@@ -71,7 +73,9 @@ quadas <- read_csv("quadas.csv")
 
 ### Search Results
 
-```{r prisma_diagram}
+A total of XX studies were identified by literature search. Studies were excluded after screened for title, abstract, or the entire full text. A total of four studies were suitable for the review and thus included in the metanalysis. A PRISMA flow diagram depicting the screening and review process is presented in the figure 1.[@Page_2021] 
+
+```{r prisma_diagram, fig.align='center', fig.width=10, fig.height=8}
 prisma_data <- PRISMA_data(prisma)
 
 PRISMA_flowdiagram(
@@ -79,7 +83,7 @@ PRISMA_flowdiagram(
               interactive = FALSE,
               previous = TRUE,
               other = TRUE,
-              fontsize = 7,
+              fontsize = 14,
               font = "Helvetica",
               title_colour = "Goldenrod1",
               greybox_colour = "Gainsboro",
@@ -93,7 +97,13 @@ PRISMA_flowdiagram(
 ```
 
 
-### Characteristics of the Included Studis
+### Summary of the Included Studies
+
+The included studies were mostly pubslished within the last decade, starting from 2013 to 2021. The four studies were all prospective studies. The study sample size ranging from X to Y, involved X to Y nodules, both totalling at XXXX patients and YYYY nodules. The range of patients age were X to Y. The tumor size between x to y. Two studies examined the liver after two days post TACE, other studies one day and at the third day after TACE. The main reference examination were X, x studies include A examination, x studies include B examination, and x studies include C examination. The X study followed up the patients for X month with X examination at X month. X studies also conduct CT scan accompanying the standalone CEUS. One study by X et al., include a an image fusion of CEUS and CT scan. 
+
+Table 1. Summary of the included Study.
+
+Table 2. Summary for the Diagnostics and Treatment in the Included Studies.
 
 ```{r descriptive analysis}
 des_ceus <- madad(ceus,
@@ -106,6 +116,8 @@ print(des_ceus)
 
 ### Publication Bias and Heterogeneity
 
+
+
 ```{r rob_summary}
 rob_summary(quadas, tool = "QUADAS-2", overall = TRUE, weighted = FALSE)
 ```
@@ -117,6 +129,8 @@ rob_traffic_light(quadas, tool = "QUADAS-2")
 
 
 ### Diagnostic Accuracy of CEUS and CECT
+
+Table 3. Individual and Pooled Diagnostic Performance of CEUS.
 
 ```{r forest_plot_sensitivity}
 forest_sens <- mada::forest(des_ceus, 
@@ -158,7 +172,21 @@ plot(fit1, predict=TRUE)
 
 ## Conclusion
 
+CEUS has shown a good diagnostic performace for detecting non responding tumor within 72 hours after TACE and could be utilized as a modality for early residual tumor detection.
+
 ## Disclaimer
+
+### Funding
+
+This study was not supported by third party funding
+
+### Conflict of Interest
+
+All authors declare no conflict of interest.
+
+### Authors Contribution
+
+Both MVLW and KAW share a proportional contribution in all phases of this study.
 
 ## References
 
