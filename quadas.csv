@@ -1,5 +1,5 @@
-Study,D1,D2,D3,D4,Overall
-Study 1,Low,Low,Low,Low,Low
-Study 2,Some concerns,Low,Low,Low,Some concerns
-Study 3,Some concerns,Low,Some concerns,Low,Some concerns
-Study 4,Low,Low,High,Low,High
+Study,Patient Selection,Index Test,Reference Standard,Flow & Timing,Overall
+Takizawa,Low,Low,Low,Low,Low
+Wobser,Some concerns,Low,Low,Low,Some concerns
+Watanabe,Some concerns,Low,Some concerns,Low,Some concerns
+Shiozawa,Low,Low,High,Low,High

@@ -3,9 +3,9 @@ title: "Utility contrast enhanced ultrasonography for detecting residual liver t
 author: "Made Vidyasti Laksita Wijaya, Kadek Adit Wiryadana"
 date: "Buleleng, `r Sys.Date()`"
 output:
+  pdf_document: default
   html_document:
     code_folding: hide
-  pdf_document: default
 bibliography: ref.bib
 csl: nature-publishing-group-vancouver.csl
 always_allow_html: true
@@ -24,7 +24,7 @@ Transarterial chemoembolization (TACE) is the recommended treatment of choice fo
 
 ### Literature Search
 
-Data from literature up to September 2022 were searched from PubMed, Embase and Google schoolar. The search term were combination of following: (1) hepatocelular carcinoma, liver carcinoma, liver cancer, hepatoma and HCC; (2) transarterial chemoembolization and TACE; and (3) contrast enhanced ultrasound, contrast enhanced ultrasonography and CEUS. 
+Data from literature up to September 2022 were searched from PubMed, Europe PMC and Google schoolar. The search term were combination of following: (1) hepatocelular carcinoma, liver carcinoma, liver cancer, hepatoma and HCC; (2) transarterial chemoembolization and TACE; and (3) contrast enhanced ultrasound, contrast enhanced ultrasonography and CEUS. 
 
 ### Study Selection
 
@@ -74,7 +74,7 @@ quadas <- read_csv("quadas.csv")
 
 ### Search Results
 
-A total of XX studies were identified by literature search. Studies were excluded after screened for title, abstract, or the entire full text. A total of four studies were suitable for the review and thus included in the metanalysis. A PRISMA flow diagram depicting the screening and review process is presented in the figure 1.[@Page_2021] 
+A total of 608 studies were identified by literature search. Studies were excluded after screened for title, abstract, or the entire full text. A total of four studies were suitable for the review and thus included in the metanalysis. A PRISMA flow diagram depicting the screening and review process is presented in the figure 1.[@Page_2021] 
 
 ```{r prisma_diagram, fig.align='center', fig.width=10, fig.height=8}
 prisma_data <- PRISMA_data(prisma)
@@ -82,7 +82,7 @@ prisma_data <- PRISMA_data(prisma)
 PRISMA_flowdiagram(
               prisma_data,
               interactive = FALSE,
-              previous = TRUE,
+              previous = FALSE,
               other = TRUE,
               fontsize = 14,
               font = "Helvetica",
@@ -129,13 +129,18 @@ print(NLR)
 
 
 
-```{r rob_summary}
-rob_summary(quadas, tool = "QUADAS-2", overall = TRUE, weighted = FALSE)
+```{r rob_summary, fig.align='center', fig.width=7, fig.height=4}
+rob_summary(quadas, 
+            tool = "QUADAS-2", 
+            overall = TRUE, 
+            weighted = FALSE)
 ```
 
 
-```{r rob_plot}
-rob_traffic_light(quadas, tool = "QUADAS-2")
+```{r rob_plot, fig.align='center', fig.width=4, fig.height=5}
+rob_traffic_light(quadas, 
+                  tool = "QUADAS-2",
+                  psize = 10)
 ```
 
 
@@ -311,26 +316,51 @@ meta::forest(DOR,
 ```
 
 
-```{r crosshair_plot}
+```{r crosshair_plot, fig.align='center', fig.height=4, fig.width=4}
 crosshair(ceus, 
-          col= factor(ceus$Author))
+          col= factor(ceus$Author),
+          xlim=c(0,1),
+          ylim=c(0,1),
+          main="Crosshair Plot"
+          )
 ```
 
-```{r roc-ecllipse}
-ROCellipse(ceus)
+```{r roc-ecllipse, fig.align='center', fig.height=4, fig.width=4}
+ROCellipse(ceus,
+           xlim=c(0,1),
+           ylim=c(0,1),
+           main="ROC Eclipse Plot",
+           )
 ```
 
-```{r reitsma}
+```{r reitsma, fig.align='center', fig.width=4, fig.height=4}
 fit1 <- reitsma(ceus)
 summary(fit1)
 
-plot(fit1, predict=TRUE)
+plot(fit1,
+     sroclwd = 2,
+     xlim=c(0,1),
+     ylim=c(0,1),
+     main="SROC Curve (Reitsma Model)",
+     predict=TRUE)
+points(fpr(ceus),
+       sens(ceus),
+       pch=2)
+legend("bottom",
+       c("SROC Bivariate", "95% CI", "Prediction"),
+       lwd = c(2,1,1),
+       lty = c(1,1,3),
+       bty = "n"
+       )
 ```
 
 
 ## Discussion
 
 ### Summary of the Results
+
+Study heterogeneity: There are many causes of this heterogeneity such as chance, difference in cut-off value, difference in study design, prevalence, research environment, and the demographic factors of the sample population.[@Shim_2019]
+
 ### Limitations
 ### Applications
 
@@ -369,11 +399,11 @@ This study aimed to gather evidence for diagnostic performance of CEUS in detect
 
 #### Methods
 
-Literature search regarding CEUS utilization early after TACE were conducted through PubMed, Embase and Google scholar up to September 30th, 2022 with various keywords combination. Suitable literatures were screened and evaluated for risk of bias with QUADAS-2. Diagnostic outcume data were analyzed with R programming. Pooled sensitivity, specificity, positive predictive value (PPV), negative predictive value (NPV), diagnostic odd ratio (DOR) calculated with Meta package. Area under the curve (AUC) from the summary of the receiver operating characteristics (sROC) curve using Reitsma method were calculated using Mada package to get the overall diagnostic performance of CEUS.  
+Literature search regarding CEUS utilization early after TACE were conducted through PubMed, Europe PMC, and Google scholar up to September 30th, 2022 with various keywords combination. Suitable literatures were screened and evaluated for risk of bias with QUADAS-2. Diagnostic outcume data were analyzed with R programming. Pooled sensitivity, specificity, positive predictive value (PPV), negative predictive value (NPV), diagnostic odd ratio (DOR) calculated with Meta package. Area under the curve (AUC) from the summary of the receiver operating characteristics (sROC) curve using Reitsma method were calculated using Mada package to get the overall diagnostic performance of CEUS.  
 
 #### Results
 
-A total of four selected study among XXXX screened literature including XXX patients and YYYY nodules. The analysis conclude the following values (95%CI) diagnostic parameter: (1) sensitivity 0.86 (0.67 - 0.95), (2) specificity 0.84 (0.64 - 0.94), (3) PPV 0.87 (0.61 - 0.95), (4) NPV 0.81 (0.66 - 0.90), (5) DOR 34.28 (14.10 - 83.33), (8) AUC sROC 0.89. The correlation of sensitivities and false positive rates was `r round(des_ceus$cor_sens_fpr,2)`. 
+A total of four selected study among 608 screened literature including XXX patients and YYYY nodules. The analysis conclude the following values (95%CI) diagnostic parameter: (1) sensitivity 0.86 (0.67 - 0.95), (2) specificity 0.84 (0.64 - 0.94), (3) PPV 0.87 (0.61 - 0.95), (4) NPV 0.81 (0.66 - 0.90), (5) DOR 34.28 (14.10 - 83.33), (8) AUC sROC 0.89. The correlation of sensitivities and false positive rates was `r round(des_ceus$cor_sens_fpr,2)`. 
 
 #### Conclusion
 
