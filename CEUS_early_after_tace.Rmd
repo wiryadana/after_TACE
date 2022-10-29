@@ -40,13 +40,14 @@ Risk of bias of the included study was assesed with QUADAS. Visualization for st
 
 ### Statistical Analysis
 
-The collected data were tabulated in spreadsheet (Google Sheet) and analyzed in R statistical language (v 4.1.2)[@r-base] through Rstudio interface (RStudio Server 2022.02.3+492 for Ubuntu Bionic).[@rstudio_2021; @ubuntu_2021] Diagnostic metanalysis specific calculation conducted using Mada package.[@mada_2022]. The main analysis was focused on the pooled diagnostic parameter of CEUS early after TACE in detecting residual tumors. The pooled sensitivity, specificity, positive predictive value (PPV), negative predictive value (NPV), positive likelihood ratio (PLR), negative likelihood ratio (NLR) and the diagnostic odds ratio were calculated using the suitable model in respect for the between study heterogeneity. The summary of diagnostic performance were presented in SROC curve.  Additional R package used include rmarkdown for reproducible data calculation and manuscript preparation,[@rmarkdown_2018] googlesheet4 for data bridging from Google Sheets to R,[@googlesheets4] gtsummary for table generation,[@gtsummary] PRISMA2022 for PRISMA chart generation,[@PRISMA2020] and robvis for risk of bias plotting.[@robvis_2019] 
+The collected data were tabulated in spreadsheet (Google Sheet) and analyzed in R statistical language (v 4.1.2)[@r-base] through Rstudio interface (RStudio Server 2022.02.3+492 for Ubuntu Bionic).[@rstudio_2021; @ubuntu_2021] Diagnostic metanalysis specific calculation conducted using Mada package.[@mada_2022] Univariate analysis of diagnostic performance conducted using metaprop function from Meta package.[@meta] The main analysis was focused on the pooled diagnostic parameter of CEUS early after TACE in detecting residual tumors. The pooled sensitivity, specificity, positive predictive value (PPV), negative predictive value (NPV), positive likelihood ratio (PLR), negative likelihood ratio (NLR) and the diagnostic odds ratio were calculated using the suitable model in respect for the between study heterogeneity. The summary of diagnostic performance were presented in SROC curve.  Additional R package used include rmarkdown for reproducible data calculation and manuscript preparation,[@rmarkdown_2018] googlesheet4 for data bridging from Google Sheets to R,[@googlesheets4] gtsummary for table generation,[@gtsummary] PRISMA2022 for PRISMA chart generation,[@PRISMA2020] and robvis for risk of bias plotting.[@robvis_2019] 
 
 ## Results
 
 ```{r library, message=FALSE, warning=FALSE, include=FALSE}
 library(tidyverse)
 library(googlesheets4)
+library(meta)
 library(mada)
 library(gtsummary)
 library(PRISMA2020)
@@ -142,8 +143,66 @@ rob_traffic_light(quadas, tool = "QUADAS-2")
 
 Table 3. Individual and Pooled Diagnostic Performance of CEUS.
 
+```{r pooled_sensitivity, fig.align='center', fig.width=8, include=FALSE}
+sensitivity_logit <- metaprop(ceus$TP, 
+                              ceus$TP + ceus$FN, 
+                              common = FALSE,
+                              random = TRUE,
+                              sm = "PLOGIT",
+                              method.ci = "CP",
+                              studlab = paste0(ceus$Author," (", ceus$Year, ")"),
+                              method = "Inverse")
 
-```{r forest_plot_sensitivity}
+print(sensitivity_logit, digits=2)
+
+```
+
+```{r forest_sensitivity, fig.align='center', fig.width=8, include=TRUE}
+meta::forest(sensitivity_logit,
+             digits = 2,
+             sortvar = ceus$Year,
+             #xlab = "Sensitivity",
+             rightcols = c("effect", "ci"),
+             rightlabs=c("Sensitivity", "95% C.I."),
+             xlim = c(0,1),
+             colgap.forest.left = "1.5cm",
+             leftcols = c("studlab", "event", "n"), 
+             leftlabs = c("Study", "TP", "TP+FN"),
+             just = "center"
+             )
+```
+
+
+```{r pooled_specificity, fig.align='center', fig.width=8, include=FALSE}
+specificity_logit <- metaprop(ceus$TN, 
+                              ceus$TN + ceus$FP, 
+                              common = FALSE,
+                              random = TRUE,
+                              sm = "PLOGIT",
+                              method.ci = "CP",
+                              studlab = paste0(ceus$Author," (", ceus$Year, ")"),
+                              method = "Inverse")
+
+print(specificity_logit, digits=2)
+
+```
+
+```{r forest_specificity, fig.align='center', fig.width=8, include=TRUE}
+meta::forest(specificity_logit,
+             digits = 2,
+             sortvar = ceus$Year,
+             #xlab = "Sensitivity",
+             rightcols = c("effect", "ci"),
+             rightlabs=c("Specificity", "95% C.I."),
+             xlim = c(0,1),
+             colgap.forest.left = "1.5cm",
+             leftcols = c("studlab", "event", "n"), 
+             leftlabs = c("Study", "TN", "TN+FP"),
+             just = "center"
+             )
+```
+
+```{r forest_plot_sensitivity, include=FALSE}
 forest_sens <- mada::forest(des_ceus, 
                type = "sens",
                snames = ceus$Author,
@@ -151,12 +210,106 @@ forest_sens <- mada::forest(des_ceus,
 
 ```
 
-```{r forest_plot_specificity}
+```{r forest_plot_specificity, include=FALSE}
 forest_spec <- mada::forest(des_ceus,
                type = "spec",
                snames = ceus$Author,
                main = "Specificity")
 ```
+
+```{r pooled_npv, fig.align='center', fig.width=8, include=FALSE}
+npv_logit <- metaprop(ceus$TN, 
+                              ceus$TN + ceus$FN, 
+                              common = FALSE,
+                              random = TRUE,
+                              sm = "PLOGIT",
+                              method.ci = "CP",
+                              studlab = paste0(ceus$Author," (", ceus$Year, ")"),
+                              method = "Inverse")
+
+print(npv_logit, digits=2)
+
+```
+
+
+```{r forest_npv, fig.align='center', fig.width=8, include=TRUE}
+meta::forest(npv_logit,
+             digits = 2,
+             sortvar = ceus$Year,
+             #xlab = "Sensitivity",
+             rightcols = c("effect", "ci"),
+             rightlabs=c("NPV", "95% C.I."),
+             xlim = c(0,1),
+             colgap.forest.left = "1.5cm",
+             leftcols = c("studlab", "event", "n"), 
+             leftlabs = c("Study", "TN", "TN+FN"),
+             just = "center"
+             )
+```
+
+
+```{r pooled_ppv, fig.align='center', fig.width=8, include=FALSE}
+ppv_logit <- metaprop(ceus$TP, 
+                              ceus$TP + ceus$FP, 
+                              common = FALSE,
+                              random = TRUE,
+                              sm = "PLOGIT",
+                              method.ci = "CP",
+                              studlab = paste0(ceus$Author," (", ceus$Year, ")"),
+                              method = "Inverse")
+
+print(ppv_logit, digits=2)
+
+```
+
+```{r forest_ppv, fig.align='center', fig.width=8, include=TRUE}
+meta::forest(ppv_logit,
+             digits = 2,
+             sortvar = ceus$Year,
+             #xlab = "Sensitivity",
+             rightcols = c("effect", "ci"),
+             rightlabs=c("PPV", "95% C.I."),
+             xlim = c(0,1),
+             colgap.forest.left = "1.5cm",
+             leftcols = c("studlab", "event", "n"), 
+             leftlabs = c("Study", "TP", "TP+FP"),
+             just = "center"
+             )
+```
+
+
+```{r pooled_DOR}
+DOR <- metabin(ceus$TP,
+               ceus$TP + ceus$FP,
+               ceus$FN,
+               ceus$FN + ceus$TN,
+               sm = "OR",
+               random = TRUE,
+               common = TRUE,
+               method="inverse",
+               studlab = paste0(ceus$Author, " (", ceus$Year, ")"),
+               data = ceus
+               )
+print(DOR, digits=2)
+```
+
+```{r forest_dor, fig.align='center', fig.width=8, include=TRUE}
+meta::forest(DOR,
+             digits = 2,
+             sortvar = ceus$Year,
+             #xlab = "Sensitivity",
+             rightcols = c("effect", "ci"),
+             rightlabs=c("DOR", "95% C.I."),
+             #xlim = c(0,1),
+             #colgap.forest.left = "1.5cm",
+             label.e = NULL,
+             label.c = NULL,
+             leftlabs = c("Study", "TP", "TP+FP", "FN", "FN+TN"),
+             just = "center"
+             )
+
+```
+
 
 ```{r crosshair_plot}
 crosshair(ceus, 
@@ -216,11 +369,11 @@ This study aimed to gather evidence for diagnostic performance of CEUS in detect
 
 #### Methods
 
-Literature search were conducted through PubMed, Embase and Google scholar up until September 2022. Pooled sensitivity, specificity, positive predictive value (PPV), negative predictive value (NPV), positive likelihood ratio (PLR), negative likelihood ratio (NLR), diagnostic odd ratio (DOR), area under the curve (AUC) from the summary of the receiver operating characteristics (sROC) curve  were calculated from selected study using R and Mada to get the overall diagnostic performance of CEUS.
+Literature search regarding CEUS utilization early after TACE were conducted through PubMed, Embase and Google scholar up to September 30th, 2022 with various keywords combination. Suitable literatures were screened and evaluated for risk of bias with QUADAS-2. Diagnostic outcume data were analyzed with R programming. Pooled sensitivity, specificity, positive predictive value (PPV), negative predictive value (NPV), diagnostic odd ratio (DOR) calculated with Meta package. Area under the curve (AUC) from the summary of the receiver operating characteristics (sROC) curve using Reitsma method were calculated using Mada package to get the overall diagnostic performance of CEUS.  
 
 #### Results
 
-A total of four selected study among XXXX screened literature including XXX patients and YYYY nodules. The analysis conclude the following diagnostic parameter: (1) sensitivity, (2) specificity, (3) PPV, (4) NPV, (5) PLR, (6) NLR, (7) DOR, (8) AUC sROC. The correlation of sensitivities and false positive rates was `r round(des_ceus$cor_sens_fpr,2)`. All of the value were higher than XXX (p < 0,05).  
+A total of four selected study among XXXX screened literature including XXX patients and YYYY nodules. The analysis conclude the following values (95%CI) diagnostic parameter: (1) sensitivity 0.86 (0.67 - 0.95), (2) specificity 0.84 (0.64 - 0.94), (3) PPV 0.87 (0.61 - 0.95), (4) NPV 0.81 (0.66 - 0.90), (5) DOR 34.28 (14.10 - 83.33), (8) AUC sROC 0.89. The correlation of sensitivities and false positive rates was `r round(des_ceus$cor_sens_fpr,2)`. 
 
 #### Conclusion
 
