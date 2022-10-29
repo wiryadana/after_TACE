@@ -1,11 +1,11 @@
 ---
-title: "Utility contrast enhanced ultrasonography for detecting residual liver tumor early after transarterial chemoembolization: A diagnostic metanalysis"
+title: "Utility of contrast enhanced ultrasonography for detecting residual liver tumor early after transarterial chemoembolization: A diagnostic metanalysis"
 author: "Made Vidyasti Laksita Wijaya, Kadek Adit Wiryadana"
 date: "Buleleng, `r Sys.Date()`"
 output:
-  pdf_document: default
   html_document:
     code_folding: hide
+  pdf_document: default
 bibliography: ref.bib
 csl: nature-publishing-group-vancouver.csl
 always_allow_html: true
@@ -79,7 +79,7 @@ A total of 608 studies were identified by literature search. Studies were exclud
 ```{r prisma_diagram, fig.align='center', fig.width=10, fig.height=8}
 prisma_data <- PRISMA_data(prisma)
 
-PRISMA_flowdiagram(
+prismaplot<-PRISMA_flowdiagram(
               prisma_data,
               interactive = FALSE,
               previous = FALSE,
@@ -94,7 +94,13 @@ PRISMA_flowdiagram(
               arrow_tail = "none",
               side_boxes = TRUE
               )
-
+prismaplot
+PRISMA_save(
+  prismaplot,
+  filename = "prisma.png",
+  filetype = "PNG",
+  overwrite = TRUE
+)
 ```
 
 
@@ -345,7 +351,8 @@ plot(fit1,
      predict=TRUE)
 points(fpr(ceus),
        sens(ceus),
-       pch=2)
+       pch=2,
+       col= factor(ceus$Author))
 legend("bottom",
        c("SROC Bivariate", "95% CI", "Prediction"),
        lwd = c(2,1,1),
@@ -399,15 +406,15 @@ This study aimed to gather evidence for diagnostic performance of CEUS in detect
 
 #### Methods
 
-Literature search regarding CEUS utilization early after TACE were conducted through PubMed, Europe PMC, and Google scholar up to September 30th, 2022 with various keywords combination. Suitable literatures were screened and evaluated for risk of bias with QUADAS-2. Diagnostic outcume data were analyzed with R programming. Pooled sensitivity, specificity, positive predictive value (PPV), negative predictive value (NPV), diagnostic odd ratio (DOR) calculated with Meta package. Area under the curve (AUC) from the summary of the receiver operating characteristics (sROC) curve using Reitsma method were calculated using Mada package to get the overall diagnostic performance of CEUS.  
+Literature search regarding CEUS utilization early after TACE were conducted through PubMed, Europe PMC, and Google Scholar up to September 30th, 2022 with various keywords combination. Suitable literatures were screened and evaluated for risk of bias with QUADAS-2. Diagnostic outcome data were analyzed with R programming. Pooled sensitivity, specificity, positive predictive value (PPV), negative predictive value (NPV), diagnostic odd ratio (DOR) calculated with Meta package. Area under the curve (AUC) from the summary of the receiver operating characteristics (sROC) curve using Reitsma method were calculated using Mada package to get the overall diagnostic performance of CEUS.  
 
 #### Results
 
-A total of four selected study among 608 screened literature including XXX patients and YYYY nodules. The analysis conclude the following values (95%CI) diagnostic parameter: (1) sensitivity 0.86 (0.67 - 0.95), (2) specificity 0.84 (0.64 - 0.94), (3) PPV 0.87 (0.61 - 0.95), (4) NPV 0.81 (0.66 - 0.90), (5) DOR 34.28 (14.10 - 83.33), (8) AUC sROC 0.89. The correlation of sensitivities and false positive rates was `r round(des_ceus$cor_sens_fpr,2)`. 
+A total of four selected studies among 608 screened literature, including 174 patients and 227 nodules. Two studies examined within 48 hours after TACE, the other within 24 hours and 72 hours. QUADAS-2 showed moderate risk of bias. The univariate analysis conclude the following values (95%CI) of diagnostic parameter: (1) sensitivity 0.86 (0.67 - 0.95), (2) specificity 0.84 (0.64 - 0.94), (3) PPV 0.87 (0.61 - 0.95), (4) NPV 0.81 (0.66 - 0.90), (5) DOR 34.28 (14.10 - 83.33). The correlation of sensitivities and false positive rates was `r round(des_ceus$cor_sens_fpr,2)`. The $I^2$ for sensitivity, specificity, PPV, NPV and DOR were 68% (p=0.02), 68% (p=0.03), 79% (P<0.01), 44% (p=0.15), 0% (p=0.54) respectively. The sROC produce AUC of 0.89 and visually indicate a study heterogeneity.
 
 #### Conclusion
 
-CEUS has shown a excelent sensitivity and specificity for detecting residual tumor within 72 hours after TACE.
+CEUS has shown a sufficient sensitivity and specificity for detecting residual tumor within 72 hours after TACE, albeit the current data showed a significant between study heterogeneity.
 
 ##### Keywords
 
