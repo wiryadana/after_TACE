@@ -339,7 +339,7 @@ ROCellipse(ceus,
            )
 ```
 
-```{r reitsma, fig.align='center', fig.width=4, fig.height=4}
+```{r reitsma, fig.align='center', fig.width=6, fig.height=6}
 fit1 <- reitsma(ceus)
 summary(fit1)
 
@@ -398,7 +398,7 @@ Both MVLW and KAW share a proportional contribution in all phases of this study.
 
 #### Background
 
-Transarterial chemoembolization (TACE) is the recommended treatment for intermediate stage, unresectable Hepatocelular Carcinomas (HCC). TACE is local delivery of embolization and chemotherapeutic particle that might not achieve a complete therapeutic response, small numbers of malignant cells can escape necrosis. Early evaluation and detection of those residual tumor warrant a chance for immediate repeat treatment and Contrast-enhanced Ultrasonography (CEUS) is among the most promising modality for early evaluation.
+Transarterial chemoembolization (TACE) is the recommended treatment for intermediate stage, unresectable, Hepatocelular Carcinomas (HCC). TACE is local delivery of embolization and chemotherapeutic particle that might not achieve a complete therapeutic response, small numbers of malignant cells can escape necrosis. Early evaluation and detection of those residual tumor warrant a chance for immediate repeat treatment and Contrast-enhanced Ultrasonography (CEUS) is among the most promising modality for early evaluation.
 
 #### Objective
 
@@ -410,7 +410,7 @@ Literature search regarding CEUS utilization early after TACE were conducted thr
 
 #### Results
 
-A total of four selected studies among 608 screened literature, including 174 patients and 227 nodules. Two studies examined within 24 hours after TACE, the other within 48 hours and 72 hours. QUADAS-2 showed moderate risk of bias. The univariate analysis conclude the following values (95%CI) of diagnostic parameter: (1) sensitivity 0.86 (0.67 - 0.95), (2) specificity 0.84 (0.64 - 0.94), (3) PPV 0.87 (0.61 - 0.95), (4) NPV 0.81 (0.66 - 0.90), (5) DOR 34.28 (14.10 - 83.33). The correlation of sensitivities and false positive rates was `r round(des_ceus$cor_sens_fpr,2)`. The $I^2$ for sensitivity, specificity, PPV, NPV and DOR were 68% (p=0.02), 68% (p=0.03), 79% (P<0.01), 44% (p=0.15), 0% (p=0.54) respectively. The sROC produce AUC of 0.89 and visually indicate a study heterogeneity.
+A total of four selected studies among 608 screened literature, including 227 nodules from 174 patients with age ranging from 44 - 89 years old. Two studies examined within 24 hours after TACE, the other within 48 hours and 72 hours. QUADAS-2 showed moderate risk of bias. The univariate analysis conclude the following values (95%CI) of diagnostic parameter: (1) sensitivity 0.86 (0.67 - 0.95), (2) specificity 0.84 (0.64 - 0.94), (3) PPV 0.87 (0.61 - 0.95), (4) NPV 0.81 (0.66 - 0.90), (5) DOR 34.28 (14.10 - 83.33). The correlation of sensitivities and false positive rates was `r round(des_ceus$cor_sens_fpr,2)`. The $I^2$ for sensitivity, specificity, PPV, NPV and DOR were 68% (p=0.02), 68% (p=0.03), 79% (P<0.01), 44% (p=0.15), 0% (p=0.54) respectively. The sROC produce AUC of 0.89 and visually indicate a study heterogeneity.
 
 #### Conclusion
 
