@@ -16,6 +16,33 @@ knitr::opts_chunk$set(warning = F)
 knitr::opts_chunk$set(echo = F)
 ```
 
+## Abstract
+
+#### Background
+
+Transarterial chemoembolization (TACE) is the recommended treatment for intermediate stage, unresectable, Hepatocelular Carcinomas (HCC). TACE is local delivery of embolization and chemotherapeutic particle that might not achieve a complete therapeutic response, small numbers of malignant cells can escape necrosis. Early evaluation and detection of those residual tumor warrant a chance for immediate repeat treatment and Contrast-enhanced Ultrasonography (CEUS) is among the most promising modality for early evaluation.
+
+#### Objective
+
+This study aimed to gather evidence for diagnostic performance of CEUS in detecting residual tumor within 24-72 hours after TACE treatment.
+
+#### Methods
+
+Literature search regarding CEUS utilization early after TACE were conducted through PubMed, Europe PMC, and Google Scholar up to September 30th, 2022 with various keywords combination. Suitable literatures were screened and evaluated for risk of bias with QUADAS-2. Diagnostic outcome data were analyzed with R programming. Pooled sensitivity, specificity, positive predictive value (PPV), negative predictive value (NPV), diagnostic odd ratio (DOR) calculated with Meta package. Area under the curve (AUC) from the summary of the receiver operating characteristics (sROC) curve using Reitsma method were calculated using Mada package to get the overall diagnostic performance of CEUS.  
+
+#### Results
+
+A total of four selected studies among 608 screened literature, including 227 nodules from 174 patients with age ranging from 44 - 89 years old. Two studies examined within 24 hours after TACE, the other within 48 hours and 72 hours. QUADAS-2 showed moderate risk of bias. The univariate analysis conclude the following values (95%CI) of diagnostic parameter: (1) sensitivity 0.86 (0.67 - 0.95), (2) specificity 0.84 (0.64 - 0.94), (3) PPV 0.87 (0.61 - 0.95), (4) NPV 0.81 (0.66 - 0.90), (5) DOR 34.28 (14.10 - 83.33). The correlation of sensitivities and false positive rates was 0.64. The $I^2$ for sensitivity, specificity, PPV, NPV and DOR were 68% (p=0.02), 68% (p=0.03), 79% (P<0.01), 44% (p=0.15), 0% (p=0.54) respectively. The sROC produce AUC of 0.89 and visually indicate a study heterogeneity.
+
+#### Conclusion
+
+CEUS has shown a sufficient sensitivity and specificity for detecting residual tumor within 72 hours after TACE, albeit the current data showed a significant between study heterogeneity.
+
+##### Keywords
+
+Contrast-enhanced ultrasonography, Diagnostics test accuracy meta-analysis, Hepatocelular carcinoma, Transarterial chemoembolization 
+
+
 ## Introduction
 
 Transarterial chemoembolization (TACE) is the recommended treatment of choice for intermediate stage HCCs.[@Kudo_2019] The underlying principle of TACE is inducing tumor tissue hypoxia with the selective delivery of embolization particles together with a chemotherapeutic drug. TACE is still considered a palliative method, although it might achieve a complete therapeutic response, small numbers of malignant cells can escape necrosis.[@Liapi_2010] Early evaluation and detection of those residual tumor warrant a chance for immediate repeat treatment.[@wobser_2014; @shiozawa_2021; @takizawa_2013; @watanabe_2020] Thereby, the modality for early detection is paramount important. The most promising modality is the contrast-enhanced ultrasonography (CEUS). This study aimed to gather evidence for diagnostic performance of CEUS in detecting residual tumor within 24-72 hours after TACE treatment.
@@ -52,6 +79,7 @@ library(mada)
 library(gtsummary)
 library(PRISMA2020)
 library(robvis)
+library(patchwork)
 ```
 
 ```{r load_data, eval=FALSE}
@@ -322,20 +350,31 @@ meta::forest(DOR,
 ```
 
 
-```{r crosshair_plot, fig.align='center', fig.height=4, fig.width=4}
+```{r crosshair_plot, fig.align='center', fig.height=6, fig.width=6}
 crosshair(ceus, 
           col= factor(ceus$Author),
           xlim=c(0,1),
           ylim=c(0,1),
-          main="Crosshair Plot"
-          )
+          main="Crosshair Plot",
+          cex.lab = 1.5)
+
+legend("bottom",
+       c("Shiozawa", "Takizawa", "Watanabe", "Wobser"),
+       lwd = c(1,1,1,1),
+       lty = c(1,1,1,1),
+       col = factor(ceus$Author),
+       bty = "n"
+       )
 ```
 
-```{r roc-ecllipse, fig.align='center', fig.height=4, fig.width=4}
+```{r roc-ecllipse, fig.align='center', fig.height=6, fig.width=6}
 ROCellipse(ceus,
+           col= factor(ceus$Author),
+           ellipsecol = "darkblue",
            xlim=c(0,1),
            ylim=c(0,1),
            main="ROC Eclipse Plot",
+           cex.lab = 1.5
            )
 ```
 
@@ -348,7 +387,8 @@ plot(fit1,
      xlim=c(0,1),
      ylim=c(0,1),
      main="SROC Curve (Reitsma Model)",
-     predict=TRUE)
+     predict=TRUE,
+     cex.lab = 1.5)
 points(fpr(ceus),
        sens(ceus),
        pch=2,
@@ -359,6 +399,10 @@ legend("bottom",
        lty = c(1,1,3),
        bty = "n"
        )
+```
+
+```{r}
+
 ```
 
 
@@ -393,32 +437,6 @@ Both MVLW and KAW share a proportional contribution in all phases of this study.
 
 <div id="refs"></div>
 
-
-## Abstract
-
-#### Background
-
-Transarterial chemoembolization (TACE) is the recommended treatment for intermediate stage, unresectable, Hepatocelular Carcinomas (HCC). TACE is local delivery of embolization and chemotherapeutic particle that might not achieve a complete therapeutic response, small numbers of malignant cells can escape necrosis. Early evaluation and detection of those residual tumor warrant a chance for immediate repeat treatment and Contrast-enhanced Ultrasonography (CEUS) is among the most promising modality for early evaluation.
-
-#### Objective
-
-This study aimed to gather evidence for diagnostic performance of CEUS in detecting residual tumor within 24-72 hours after TACE treatment.
-
-#### Methods
-
-Literature search regarding CEUS utilization early after TACE were conducted through PubMed, Europe PMC, and Google Scholar up to September 30th, 2022 with various keywords combination. Suitable literatures were screened and evaluated for risk of bias with QUADAS-2. Diagnostic outcome data were analyzed with R programming. Pooled sensitivity, specificity, positive predictive value (PPV), negative predictive value (NPV), diagnostic odd ratio (DOR) calculated with Meta package. Area under the curve (AUC) from the summary of the receiver operating characteristics (sROC) curve using Reitsma method were calculated using Mada package to get the overall diagnostic performance of CEUS.  
-
-#### Results
-
-A total of four selected studies among 608 screened literature, including 227 nodules from 174 patients with age ranging from 44 - 89 years old. Two studies examined within 24 hours after TACE, the other within 48 hours and 72 hours. QUADAS-2 showed moderate risk of bias. The univariate analysis conclude the following values (95%CI) of diagnostic parameter: (1) sensitivity 0.86 (0.67 - 0.95), (2) specificity 0.84 (0.64 - 0.94), (3) PPV 0.87 (0.61 - 0.95), (4) NPV 0.81 (0.66 - 0.90), (5) DOR 34.28 (14.10 - 83.33). The correlation of sensitivities and false positive rates was `r round(des_ceus$cor_sens_fpr,2)`. The $I^2$ for sensitivity, specificity, PPV, NPV and DOR were 68% (p=0.02), 68% (p=0.03), 79% (P<0.01), 44% (p=0.15), 0% (p=0.54) respectively. The sROC produce AUC of 0.89 and visually indicate a study heterogeneity.
-
-#### Conclusion
-
-CEUS has shown a sufficient sensitivity and specificity for detecting residual tumor within 72 hours after TACE, albeit the current data showed a significant between study heterogeneity.
-
-##### Keywords
-
-Contrast-enhanced ultrasonography, Diagnostics test accuracy meta-analysis, Hepatocelular carcinoma, Transarterial chemoembolization 
 
 ```{bash}
 cp CEUS_early_after_tace.html index.html
